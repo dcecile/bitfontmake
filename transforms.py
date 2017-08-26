@@ -57,7 +57,6 @@ def convert_to_info_params(bit_metrics, bit_info):
         ('openTypeOS2TypoLineGap', 0),
         ('openTypeHheaLineGap', 0),
         ('openTypeOS2WeightClass', bit_info.weight),
-        ('openTypeOS2WidthClass', 5),
         ('openTypeNameDesigner', bit_info.designer),
         ('openTypeNameDesignerURL', bit_info.designer_url),
         ('copyright', 'Copyright %s %s' % (bit_info.copyright_year, bit_info.designer)),
