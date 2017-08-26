@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Bit Font Make Test</title>
+    <style>
+    .size {
+      margin: 40px;
+      display: flex;
+    }
+    .guide {
+      display: flex;
+      flex-direction: column;
+      width: 200px;
+      margin-right: -200px;
+      padding: 0px 0;
+    }
+    .guide .em {
+      display: flex;
+      background-color: cyan;
+    }
+    .size.big .guide .em {
+      height: 60px;
+    }
+    .size.small .guide .em {
+      height: 6px;
+    }
+    .guide .gap {
+      display: flex;
+      height: 10px;
+    }
+    .size.big .guide .gap {
+      height: 10px;
+    }
+    .size.small .guide .gap {
+      height: 1px;
+    }
+    .guide .gap.top {
+      background-color: magenta;
+    }
+    .guide .gap.bottom {
+      background-color: mediumpurple;
+    }
+    .test {
+      font-family: 'Bit Font Make Test';
+      margin: 0;
+    }
+    .size.big .test {
+      padding-left: 5px;
+      font-size: 60px;
+      width: 150px;
+    }
+    .size.small .test {
+      padding-left: 0.5px;
+      font-size: 6px;
+      width: 15px;
+    }
+    .test .box {
+      background-color: yellow;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="size big">
+      <div class="guide">
+        <div class="gap top"></div>
+        <div class="em"></div>
+        <div class="gap bottom"></div>
+        <div class="gap top"></div>
+        <div class="em"></div>
+        <div class="gap bottom"></div>
+      </div>
+      <p class="test">A<span class="box">A</span> AA<span class="box">A</span></p>
+    </div>
+    <div class="size small">
+      <div class="guide">
+        <div class="gap top"></div>
+        <div class="em"></div>
+        <div class="gap bottom"></div>
+        <div class="gap top"></div>
+        <div class="em"></div>
+        <div class="gap bottom"></div>
+      </div>
+      <p class="test">A<span class="box">A</span> AA<span class="box">A</span></p>
+    </div>
+  </body>
+</html>
