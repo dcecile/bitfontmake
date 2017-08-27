@@ -1,17 +1,5 @@
 # bitfontmake
-_Compile vectorized bitmap fonts from PNG to OTF/TTF_
-
-## Font output
-
-The following font parameters are not set:
-
-- PostScript hinting
-- trademark
-- OS/2 Panose, Unicode ranges, and vendor ID
-- OpenType manufacturer, designer
-
-The following font parameters are set to default values:
-
+_Compile raster images to vectorized bitmap fonts_
 
 ## Developing
 
