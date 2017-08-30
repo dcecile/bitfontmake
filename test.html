@@ -12,8 +12,8 @@
     .guide {
       display: flex;
       flex-direction: column;
-      width: 200px;
-      margin-right: -200px;
+      width: 350px;
+      margin-right: -350px;
       padding: 0px 0;
     }
     .guide .em {
@@ -43,18 +43,27 @@
       background-color: mediumpurple;
     }
     .test {
-      font-family: 'Bit Font Make Test';
       margin: 0;
     }
+    .test.py {
+      font-family: 'Bit Font Make TestPy';
+    }
+    .test.png {
+      font-family: 'Bit Font Make TestPNG';
+    }
     .size.big .test {
-      padding-left: 5px;
       font-size: 60px;
       width: 150px;
     }
+    .size.big .test.py {
+      padding-left: 5px;
+    }
     .size.small .test {
-      padding-left: 0.5px;
       font-size: 6px;
       width: 15px;
+    }
+    .size.small .test.py {
+      padding-left: 0.5px;
     }
     .test .box {
       background-color: yellow;
@@ -71,7 +80,8 @@
         <div class="em"></div>
         <div class="gap bottom"></div>
       </div>
-      <p class="test">A<span class="box">A</span> AA<span class="box">A</span></p>
+      <p class="test py">A<span class="box">A</span> AA<span class="box">A</span></p>
+      <p class="test png">B<span class="box">C</span> BC<span class="box">B</span></p>
     </div>
     <div class="size small">
       <div class="guide">
@@ -82,7 +92,8 @@
         <div class="em"></div>
         <div class="gap bottom"></div>
       </div>
-      <p class="test">A<span class="box">A</span> AA<span class="box">A</span></p>
+      <p class="test py">A<span class="box">A</span> AA<span class="box">A</span></p>
+      <p class="test png">B<span class="box">C</span> BC<span class="box">B</span></p>
     </div>
   </body>
 </html>

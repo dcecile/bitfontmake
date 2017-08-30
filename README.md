@@ -5,12 +5,12 @@ _Compile raster images to vectorized bitmap fonts_
 
 ### Prerequisites
 
-You'll need to install Python 3 (to run the font compiler) and `venv` (to fetch local dependencies).
+You'll need to install Python 3.6 (to run the font compiler) and `venv` (to fetch local dependencies).
 
 From a terminal inside a clone of this project, first create a new virtual environment:
 
 ```
-python3 -m venv env
+python3.6 -m venv env
 ```
 
 Then activate that environment:

@@ -1,9 +1,9 @@
+from defcon import Font, Glyph, Contour, Point
 from functools import partial
 from objects import BitFont, BitInfo, BitGlyph, BitMetrics
-from defcon import Font, Glyph, Contour, Point
+import codepoints
 import re
 import unicodedata
-import codepoints
 
 def convert_to_font(bit_font):
     bit_metrics = calculate_bit_metrics(bit_font.size)
@@ -59,8 +59,8 @@ def convert_to_info_params(bit_metrics, bit_info):
         ('openTypeOS2WeightClass', bit_info.weight),
         ('openTypeNameDesigner', bit_info.designer),
         ('openTypeNameDesignerURL', bit_info.designer_url),
-        ('copyright', 'Copyright %s %s' % (bit_info.copyright_year, bit_info.designer)),
-        ('openTypeNameLicense', u'This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFL. This Font Software is distributed on an \u2018AS IS\u2019 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the SIL Open Font License for the specific language, permissions and limitations governing your use of this Font Software.' if bit_info.is_ofl else None),
+        ('copyright', f'Copyright {bit_info.copyright_year} {bit_info.designer}'),
+        ('openTypeNameLicense', 'This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFL. This Font Software is distributed on an \u2018AS IS\u2019 BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the SIL Open Font License for the specific language, permissions and limitations governing your use of this Font Software.' if bit_info.is_ofl else None),
         ('openTypeNameLicenseURL', 'http://scripts.sil.org/OFL' if bit_info.is_ofl else None),
         ('openTypeOS2Type', [] if bit_info.is_ofl else None),
     ]

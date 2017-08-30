@@ -1,5 +1,6 @@
 from tempfile import TemporaryDirectory
 from pathlib import Path
+from itertools import takewhile
 
 class TemporaryWorkingDirectory():
     def __init__(self):
@@ -17,3 +18,6 @@ class TemporaryWorkingDirectory():
         self.temporaryDirectory = None
         self.path.__exit__(*args)
         self.path = None
+
+def count_while(test, iterable):
+    return len(list(takewhile(test, iterable)))
