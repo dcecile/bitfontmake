@@ -23,7 +23,7 @@ def calculate_bit_metrics(bit_size):
         ascender=units_per_pixel * (height + 1),
         descender=units_per_pixel * (-1),
         line_gap=units_per_pixel * 2,
-        left_advance=units_per_pixel / 2,
+        left_advance=0,
         total_advance=units_per_pixel * (width + 1))
 
 def create_extra_bit_glyphs(bit_metrics):
