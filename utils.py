@@ -1,23 +1,22 @@
-from tempfile import TemporaryDirectory
-from pathlib import Path
+from contextlib import contextmanager
 from itertools import takewhile
+from tempfile import TemporaryDirectory
+import os
 
-class TemporaryWorkingDirectory():
-    def __init__(self):
-        self.temporaryDirectory = None
-        self.path = None
+@contextmanager
+def change_cwd(path):
+    original_cwd = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(original_cwd)
 
-    def __enter__(self):
-        self.temporaryDirectory = TemporaryDirectory()
-        self.path = Path(
-            self.temporaryDirectory.__enter__())
-        self.path.__enter__()
-
-    def __exit__(self, *args):
-        self.temporaryDirectory.__exit__(*args)
-        self.temporaryDirectory = None
-        self.path.__exit__(*args)
-        self.path = None
+@contextmanager
+def temporary_cwd():
+    with TemporaryDirectory() as path:
+        with change_cwd(path):
+            yield
 
 def count_while(test, iterable):
     return len(list(takewhile(test, iterable)))
