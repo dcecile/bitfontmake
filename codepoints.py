@@ -1,4 +1,13 @@
 import unicodedata
 
-no_break_space = unicodedata.lookup('NO-BREAK SPACE')
 replacement_character = unicodedata.lookup('REPLACEMENT CHARACTER')
+
+spaces = list(map(unicodedata.lookup, [
+    'SPACE',
+    'NO-BREAK SPACE',
+    'THIN SPACE',
+    'IDEOGRAPHIC SPACE',
+]))
+
+def is_uppercase(codepoint):
+    return unicodedata.category(codepoint) == 'Lu'

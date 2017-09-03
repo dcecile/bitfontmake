@@ -32,6 +32,16 @@ def create_py_bit_font():
                     X, o, o, X,
                 ]),
             BitGlyph(
+                codepoint=' ',
+                bits=[
+                    o, o, o, o,
+                    o, o, o, o,
+                    o, X, X, o,
+                    o, X, X, o,
+                    o, o, o, o,
+                    o, o, o, o,
+                ]),
+            BitGlyph(
                 codepoint=codepoints.replacement_character,
                 bits=[
                     X, o, X, o,
@@ -45,10 +55,7 @@ def create_py_bit_font():
 
 def test_bit_font(bit_font):
     print(bit_font)
-
     font = convert_to_font(bit_font)
-    print(font)
-
     font.save(
         path=f'master_ufo/{bit_font.info.family_name}.ufo',
         formatVersion=3)

@@ -210,7 +210,11 @@ def create_bit_info(info_json):
 
 def read_glyphs(image_basics):
     for i in range(0, image_basics.glyph_count):
-        glyph_values = get_glyph_values(image_basics.values, image_basics.size, image_basics.glyph_size, i)
+        glyph_values = get_glyph_values(
+            image_basics.values,
+            image_basics.size,
+            image_basics.glyph_size,
+            image_basics.glyph_count - 1 - i)
         yield read_glyph(image_basics.glyph_size, glyph_values)
 
 def get_glyph_values(image_data, image_size, glyph_size, i):

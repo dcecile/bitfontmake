@@ -23,3 +23,11 @@ def count_while(test, iterable):
 
 def flatten(list_of_lists):
     return list(chain.from_iterable(list_of_lists))
+
+def distinct_by(selector, iterable):
+    keys = set()
+    for value in iterable:
+        key = selector(value)
+        if key not in keys:
+            keys.add(key)
+            yield value

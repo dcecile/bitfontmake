@@ -253,8 +253,14 @@ X: #00******
 
 ## Automatic glyphs
 
-The following code points must be omitted from the glyph sequence because
-they will be inferred as blank:
+Any lowercase code point may be omitted from the glyph sequence, to be
+inferred as *identical* to the matching uppercase code point in the
+sequence.
+
+Any of the following code point may be omitted from the glyph sequence,
+to be inferred as blank:
 
  * `U+0020 SPACE`
  * `U+00A0 NO-BREAK SPACE`
+ * `U+2009 THIN SPACE`
+ * `U+3000 IDEOGRAPHIC SPACE`

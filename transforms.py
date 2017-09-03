@@ -4,11 +4,11 @@ from objects import BitFont, BitInfo, BitGlyph, BitMetrics
 import codepoints
 import re
 import unicodedata
-from utils import flatten
+from utils import flatten, distinct_by
 
 def convert_to_font(bit_font):
     bit_metrics = calculate_bit_metrics(bit_font.size)
-    all_bit_glyphs = bit_font.glyphs + create_extra_bit_glyphs(bit_metrics)
+    all_bit_glyphs = add_extra_bit_glyphs(bit_font.glyphs, bit_metrics)
     return create_font(
         info_params=convert_to_info_params(bit_metrics, bit_font.info),
         glyphs=convert_to_glyphs(bit_metrics, all_bit_glyphs))
@@ -21,12 +21,11 @@ def calculate_bit_metrics(bit_size):
     stems = list(
         units_per_pixel * (i + 1)
         for i in range(0, 4))
-    values = flatten(set([
+    values = flatten({
         (0, -25),
         (x_height, 25),
         (units_per_em, 25)
-    ]))
-    print('blue values', values)
+    })
     return BitMetrics(
         width=width,
         height=height,
@@ -41,18 +40,27 @@ def calculate_bit_metrics(bit_size):
         stems=stems,
         values=values)
 
-def create_extra_bit_glyphs(bit_metrics):
+def add_extra_bit_glyphs(bit_glyphs, bit_metrics):
+    return list(distinct_by(
+        lambda bit_glyph: bit_glyph.codepoint,
+        bit_glyphs
+        + list(create_space_bit_glyphs(bit_metrics))
+        + list(create_lowercase_bit_glyphs(bit_glyphs))))
+
+def create_space_bit_glyphs(bit_metrics):
     space_bits = ([False]
         * bit_metrics.width
         * bit_metrics.height)
-    return [
-        BitGlyph(
-            codepoint=' ',
-            bits=space_bits),
-        BitGlyph(
-            codepoint=codepoints.no_break_space,
-            bits=space_bits),
-    ]
+    return (BitGlyph(codepoint=codepoint, bits=space_bits)
+        for codepoint in codepoints.spaces)
+
+def create_lowercase_bit_glyphs(bit_glyphs):
+    for bit_glyph in bit_glyphs:
+        codepoint = bit_glyph.codepoint
+        if codepoints.is_uppercase(codepoint):
+            yield BitGlyph(
+                codepoint=codepoint.lower(),
+                bits=bit_glyph.bits)
 
 def convert_to_info_params(bit_metrics, bit_info):
     return [
