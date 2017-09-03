@@ -20,17 +20,18 @@ The raster image is separated into two sections:
  * the "info" section at the top, containing all metadata about the font
  * the "glyphs" section below, containing all glyphs in vertical sequence
 
-The only significant color channel in the raster image is the **red**
-channel. All other channels (blue, green, alpha) are ignored. *All 8-bit
-binary values are encoded directly into the 8-bit red channel value of
-each pixel.*
+The only significant color channels in the raster image are the **red**
+channel and the **alpha** channel. All other channels (blue and green) are
+ignored. *All 8-bit binary values are encoded directly into the 8-bit red
+channel value of each pixel, with the exception of value 255, which may
+either be encoded as red 255 or alpha 0.*
 
 The following raster image formats are supported: GIF, PNG, and BMP.
 
 ## Example RGBA encoding
 
 One recommended RGBA encoding is to set the background colour of the
-raster image to `#FFFFFF00` (transparent white), which is used for the
+raster image to `#??????00` (fully transparent), which is used for the
 binary value 255, while using `#000000FF` (solid black) for binary value
 0, and `#??FFFFFF` (light cyan) for all other binary values from 1 to
 254. When used together with the GIF file format, this RGBA encoding can
@@ -59,24 +60,24 @@ The overall image height must be equal to the height of the info section
 plus the height of the glyphs section.
 
 To calculate the glyph height from a raster image file, start at the
-bottom-left pixel, and continue read up until the the following red value
-sequence is found:
+bottom-left pixel, and continue read up until the the following red/alpha
+value sequence is found:
 
 ```
 #EF******
 #BF******
 #BD******
-#FF****** { repeated N times }
+#FF****** or #******00 { repeated N times }
 ```
 
-Based on the `N` times that the `#FF******` pixel was read, the glyph
-height is calculated to be `N + 1`.
+Based on the `N` times that the 255-value pixel was read, the glyph height
+is calculated to be `N + 1`.
 
 To calculate the total number of glyphs, and thus the height of the info
 section, start from one pixel above the `#EF******` pixel that was just
-found. If this is a `#FF******` pixel, then there is at least one more
+found. If this is a 255-value pixel, then there is at least one more
 glyph: repeat the test with the pixel that's the glyph height plus two
-pixels above this one. If this is not a `#FF******` pixel, then the info
+pixels above this one. If this is not a 255-value pixel, then the info
 section has been found: this row plus all preceding rows are part of the
 info section.
 
@@ -112,9 +113,10 @@ parameters](http://unifiedfontobject.org/versions/ufo3/fontinfo.plist/).)
 All required JSON keys must be specified.
 
 After encoding the UTF-8 JSON object, the binary values must encoded as
-red values of the raster image's pixels. The order of the data must be
-left-to-right, top-to-bottom. Any remaining pixels on the final row of the
-info section must be encoded with red value 255.
+red values of the raster image's pixels. (Byte value 255 is invalid for
+UTF-8.) The order of the data must be left-to-right, top-to-bottom. Any
+remaining pixels on the final row of the info section must be encoded
+with red value 255 or alpha value 0.
 
 ## Example info parameters
 
@@ -157,7 +159,7 @@ from top to bottom:
 ┃yz!!!┃
 ```
 
-And these are the red values that would be used for those pixels:
+And these are the red/alpha values that would be used for those pixels:
 
 ```
 0: #7B******
@@ -173,9 +175,9 @@ And these are the red values that would be used for those pixels:
 ............
 y: #30******
 z: #7D******
-!: #FF******
-!: #FF******
-!: #FF******
+!: #FF****** or #******00
+!: #FF****** or #******00
+!: #FF****** or #******00
 ```
 
 ## Automatic info parameters
@@ -220,12 +222,12 @@ the alpha value is set to 1.
 glyph is used.)
 
 The rest of the 1-pixel border surrounding the bit data (not containing
-the Unicode code point) must be set to red value 255.
+the Unicode code point) must be set to red value 255 or alpha value 0.
 
 Inside the 1-pixel border is the bit data for the glyph. Each pixel must
-be either red value zero or red value 255. The layout of red-value zero
-pixels matches the exact location of where the glyph will be filled when
-rendered by the font.
+be either red value zero or red value 255 / alpha value 0. The layout of
+red-value zero pixels matches the exact location of where the glyph will
+be filled when rendered by the font.
 
 ## Example glyph
 
@@ -245,7 +247,7 @@ The pixels in this example have the following red values:
 
 ```
 P: #50******
--: #FF******
+-: #FF****** or #******00
 X: #00******
 ```
 

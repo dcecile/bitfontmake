@@ -23,8 +23,7 @@ def buildFont():
             attachment_filename=font_filename)
 
 def get_font_name(font):
-    info = font.info
-    return info.postscriptFontName or postscriptFontNameFallback(info)
+    return postscriptFontNameFallback(font.info)
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)

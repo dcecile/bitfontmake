@@ -29,8 +29,8 @@ pip install -r requirements.txt
 
 Here are some ways to test changes:
 
-- `python main.py` (to run the module)
-- `python services.py` (to run the Flask web server)
+- `python test.py` (to run the test compilation)
+- `python service.py` (to run the Flask web server)
 - `heroku local` (to run the Flask web server in a Heroku-like environment)
 
 ### Style

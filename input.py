@@ -7,9 +7,9 @@ from utils import count_while
 import codepoints
 import json
 
-def open_bit_font(path):
+def open_bit_font(source):
     try:
-        image_basics = read_image_basics(path)
+        image_basics = read_image_basics(source)
         info = read_info(image_basics)
         glyphs = list(read_glyphs(image_basics))
         return BitFont(
@@ -34,7 +34,7 @@ ImageInputBasics = namedtuple(
     ])
 
 def read_image_basics(path):
-    image = Image.open(path)
+    image = convert_image_to_rgba(Image.open(path))
     image_values = get_image_values(image)
     image_left_column = get_image_left_column(image_values, image.width)
     image_left_column_reversed = list(reversed(image_left_column))
@@ -47,20 +47,25 @@ def read_image_basics(path):
         glyph_size=(glyph_width, glyph_height),
         glyph_count=glyph_count)
 
-def calculate_glyph_width(image_width):
-    width = image_width - 2
-    if width < 3:
-        raise ImageInputError(f'Glyph width {width} too low')
-    return width
+def convert_image_to_rgba(image):
+    if image.mode == 'RGBA':
+        return image
+    else:
+        return image.convert(mode='RGBA')
 
 def get_image_values(image):
-    values = image.getdata(0)
-    for value in values:
-        if value < 0 or value > 255:
-            raise ImageInputError(f'Binary value {value} not in range')
-        elif value != int(value):
-            raise ImageInputError(f'Binary value {value} not an integer')
-    return list(map(int, values))
+    def convert(color):
+        red = color[0]
+        alpha = color[3]
+        if red < 0 or red > 255:
+            raise ImageInputError(f'Red value {value} not in range')
+        elif red != int(red):
+            raise ImageInputError(f'Red value {value} not an integer')
+        elif alpha == 0:
+            return 255
+        else:
+            return int(red)
+    return list(map(convert, image.getdata()))
 
 def get_image_left_column(image_values, image_width):
     indices = range(
@@ -68,6 +73,12 @@ def get_image_left_column(image_values, image_width):
         len(image_values),
         image_width)
     return list(image_values[i] for i in indices)
+
+def calculate_glyph_width(image_width):
+    width = image_width - 2
+    if width < 3:
+        raise ImageInputError(f'Glyph width {width} too low')
+    return width
 
 def find_glyph_height(image_left_column_reversed):
     blanks = count_while(is_pixel_blank, image_left_column_reversed)

@@ -43,9 +43,6 @@ def create_py_bit_font():
                 ]),
         ])
 
-def open_gif_bit_font():
-    return open_bit_font('test.png')
-
 def test_bit_font(bit_font):
     print(bit_font)
 
@@ -53,12 +50,17 @@ def test_bit_font(bit_font):
     print(font)
 
     font.save(
-        path='test_py.ufo' if 'Py' in bit_font.info.family_name else 'test_png.ufo',
+        path=f'master_ufo/{bit_font.info.family_name}.ufo',
         formatVersion=3)
     project = FontProject()
     project.build_otfs(
         [font],
         remove_overlaps=True)
 
-for bit_font in [create_py_bit_font(), open_gif_bit_font()]:
+bit_fonts = [
+    create_py_bit_font(),
+    open_bit_font('test.png'),
+    open_bit_font('test.gif'),
+]
+for bit_font in bit_fonts:
     test_bit_font(bit_font)
