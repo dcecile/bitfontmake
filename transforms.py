@@ -4,6 +4,7 @@ from objects import BitFont, BitInfo, BitGlyph, BitMetrics
 import codepoints
 import re
 import unicodedata
+from utils import flatten
 
 def convert_to_font(bit_font):
     bit_metrics = calculate_bit_metrics(bit_font.size)
@@ -15,16 +16,30 @@ def convert_to_font(bit_font):
 def calculate_bit_metrics(bit_size):
     (width, height) = bit_size
     units_per_pixel = 100
+    units_per_em = units_per_pixel * height
+    x_height = find_x_height() or units_per_em
+    stems = list(
+        units_per_pixel * (i + 1)
+        for i in range(0, 4))
+    values = flatten(set([
+        (0, -25),
+        (x_height, 25),
+        (units_per_em, 25)
+    ]))
+    print('blue values', values)
     return BitMetrics(
         width=width,
         height=height,
         units_per_pixel=units_per_pixel,
-        units_per_em=units_per_pixel * height,
+        units_per_em=units_per_em,
         ascender=units_per_pixel * (height + 1),
         descender=units_per_pixel * (-1),
+        x_height=x_height,
         line_gap=units_per_pixel * 2,
         left_advance=0,
-        total_advance=units_per_pixel * (width + 1))
+        total_advance=units_per_pixel * (width + 1),
+        stems=stems,
+        values=values)
 
 def create_extra_bit_glyphs(bit_metrics):
     space_bits = ([False]
@@ -48,12 +63,15 @@ def convert_to_info_params(bit_metrics, bit_info):
         ('postscriptIsFixedPitch', True),
         ('postscriptUnderlinePosition', -bit_metrics.units_per_pixel / 2),
         ('postscriptUnderlineThickness', bit_metrics.units_per_pixel),
+        ('postscriptBlueValues', bit_metrics.values),
+        ('postscriptStemSnapH', bit_metrics.stems),
+        ('postscriptStemSnapV', bit_metrics.stems),
         ('versionMajor', bit_info.major_version),
         ('versionMinor', bit_info.minor_version),
         ('ascender', bit_metrics.ascender),
         ('descender', bit_metrics.descender),
         ('capHeight', bit_metrics.units_per_em),
-        ('xHeight', find_x_height() or bit_metrics.units_per_em),
+        ('xHeight', bit_metrics.x_height),
         ('openTypeOS2TypoLineGap', 0),
         ('openTypeHheaLineGap', 0),
         ('openTypeOS2WeightClass', bit_info.weight),

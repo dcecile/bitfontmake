@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from itertools import takewhile
+from itertools import takewhile, chain
 from tempfile import TemporaryDirectory
 import os
 
@@ -20,3 +20,6 @@ def temporary_cwd():
 
 def count_while(test, iterable):
     return len(list(takewhile(test, iterable)))
+
+def flatten(list_of_lists):
+    return list(chain.from_iterable(list_of_lists))

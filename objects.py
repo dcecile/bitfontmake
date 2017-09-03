@@ -38,7 +38,10 @@ BitMetrics = namedtuple(
         'units_per_em',
         'ascender',
         'descender',
+        'x_height',
         'line_gap',
         'left_advance',
         'total_advance',
+        'stems',
+        'values',
     ])
