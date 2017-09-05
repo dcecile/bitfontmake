@@ -8,17 +8,28 @@ from transforms import convert_to_font
 app = Flask(__name__)
 
 @app.route('/compile-to-otf', methods=['POST'])
-def buildFont():
+def compile_font_to_otf():
+    return compile_font(
+        'otf',
+        lambda project: project.build_otfs)
+
+@app.route('/compile-to-ttf', methods=['POST'])
+def compile_font_to_ttf():
+    return compile_font(
+        'ttf',
+        lambda project: project.build_ttfs)
+
+def compile_font(extension, action):
     with temporary_cwd():
         bit_font = open_bit_font(request.stream)
         font = convert_to_font(bit_font)
         project = FontProject()
-        project.build_otfs(
+        action(project)(
             [font],
             remove_overlaps=True)
-        font_filename = f'{get_font_name(font)}.otf'
+        font_filename = f'{get_font_name(font)}.{extension}'
         return send_file(
-            open(f'master_otf/{font_filename}', 'rb'),
+            open(f'master_{extension}/{font_filename}', 'rb'),
             as_attachment=True,
             attachment_filename=font_filename)
 
