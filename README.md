@@ -1,6 +1,23 @@
 # bitfontmake
 _Compile raster images to vectorized bitmap fonts_
 
+## Usage
+
+Follow the directions in [rasterspec.md](rasterspec.md) to construct
+a raster image that `bitfontmake` can convert into a font.
+
+Then upload your GIF, PNG, or BMP file to the `bitfontmake` web service.
+Here's how to do that via cURL, using `[my-new-file]` as the file to
+upload:
+
+```
+curl -v -O -J -X POST --data-binary @[my-new-file] \
+  https://bitfontmake.herokuapp.com/compile-to-otf
+```
+
+(The `/compile-to-ttf` POST endpoint is also available, for compiling TTF
+font files.)
+
 ## Developing
 
 ### Prerequisites
