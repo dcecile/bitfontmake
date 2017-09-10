@@ -4,20 +4,20 @@ from objects import BitFont, BitInfo, BitGlyph, BitMetrics
 import codepoints
 import re
 import unicodedata
-from utils import flatten, distinct, distinct_by
+from utils import flatten, distinct, distinct_by, count_while
 
 def convert_to_font(bit_font):
-    bit_metrics = calculate_bit_metrics(bit_font.size)
+    bit_metrics = calculate_bit_metrics(bit_font.size, bit_font.glyphs)
     all_bit_glyphs = add_extra_bit_glyphs(bit_font.glyphs, bit_metrics)
     return create_font(
         info_params=convert_to_info_params(bit_metrics, bit_font.info),
         glyphs=convert_to_glyphs(bit_metrics, all_bit_glyphs))
 
-def calculate_bit_metrics(bit_size):
+def calculate_bit_metrics(bit_size, bit_glyphs):
     (width, height) = bit_size
     units_per_pixel = 100
     units_per_em = units_per_pixel * height
-    x_height = find_x_height() or units_per_em
+    x_height = units_per_pixel * (find_x_height(bit_size, bit_glyphs))
     stems = list(
         units_per_pixel * (i + 1)
         for i in range(0, 4))
@@ -97,8 +97,20 @@ def convert_to_info_params(bit_metrics, bit_info):
         ('openTypeOS2Type', [] if bit_info.is_ofl else None),
     ]
 
-def find_x_height():
-    return None
+def find_x_height(bit_size, bit_glyphs):
+    (width, height) = bit_size
+    x_glyph_option = list(glyph
+        for glyph in bit_glyphs
+        if glyph.codepoint == 'x')
+    if x_glyph_option:
+        x_glyph = x_glyph_option[0]
+        blank_bits = count_while(
+            lambda value: not value,
+            x_glyph.bits)
+        blank_rows = blank_bits / height
+        return height - blank_rows
+    else:
+        return height
 
 def convert_to_glyphs(bit_metrics, bit_glyphs):
     return map(
