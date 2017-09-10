@@ -31,3 +31,6 @@ def distinct_by(selector, iterable):
         if key not in keys:
             keys.add(key)
             yield value
+
+def distinct(iterable):
+    return distinct_by(lambda value: value, iterable)

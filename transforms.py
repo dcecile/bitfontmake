@@ -4,7 +4,7 @@ from objects import BitFont, BitInfo, BitGlyph, BitMetrics
 import codepoints
 import re
 import unicodedata
-from utils import flatten, distinct_by
+from utils import flatten, distinct, distinct_by
 
 def convert_to_font(bit_font):
     bit_metrics = calculate_bit_metrics(bit_font.size)
@@ -21,11 +21,13 @@ def calculate_bit_metrics(bit_size):
     stems = list(
         units_per_pixel * (i + 1)
         for i in range(0, 4))
-    values = flatten({
-        (0, -25),
-        (x_height, 25),
-        (units_per_em, 25)
-    })
+    distinct_heights = distinct([
+        0,
+        x_height,
+        units_per_em])
+    values = list(flatten(
+        (height - 5, height + 5) for height in distinct_heights))
+    scale = 4.0 / units_per_pixel
     return BitMetrics(
         width=width,
         height=height,
@@ -38,7 +40,8 @@ def calculate_bit_metrics(bit_size):
         left_advance=0,
         total_advance=units_per_pixel * (width + 1),
         stems=stems,
-        values=values)
+        values=values,
+        scale=scale)
 
 def add_extra_bit_glyphs(bit_glyphs, bit_metrics):
     return list(distinct_by(
@@ -72,6 +75,9 @@ def convert_to_info_params(bit_metrics, bit_info):
         ('postscriptUnderlinePosition', -bit_metrics.units_per_pixel / 2),
         ('postscriptUnderlineThickness', bit_metrics.units_per_pixel),
         ('postscriptBlueValues', bit_metrics.values),
+        ('postscriptBlueScale', bit_metrics.scale),
+        ('postscriptBlueShift', 0),
+        ('postscriptBlueFuzz', 0),
         ('postscriptStemSnapH', bit_metrics.stems),
         ('postscriptStemSnapV', bit_metrics.stems),
         ('versionMajor', bit_info.major_version),

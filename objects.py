@@ -44,4 +44,5 @@ BitMetrics = namedtuple(
         'total_advance',
         'stems',
         'values',
+        'scale',
     ])
