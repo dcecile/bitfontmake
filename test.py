@@ -60,7 +60,7 @@ def test_bit_font(bit_font):
         path=f'master_ufo/{bit_font.info.family_name}.ufo',
         formatVersion=3)
     project = FontProject()
-    project.build_otfs(
+    project.build_ttfs(
         [font],
         remove_overlaps=True)
 

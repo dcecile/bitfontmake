@@ -7,7 +7,7 @@ from transforms import convert_to_font
 
 app = Flask(__name__)
 
-@app.route('/compile-to-otf', methods=['POST'])
+@app.route('/compile-to-otf-alpha-support', methods=['POST'])
 def compile_font_to_otf():
     return compile_font(
         'otf',

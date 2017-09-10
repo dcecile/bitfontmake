@@ -11,12 +11,11 @@ Here's how to do that via cURL, using `[my-new-file]` as the file to
 upload:
 
 ```
-curl -v -O -J -X POST --data-binary @[my-new-file] \
-  https://bitfontmake.herokuapp.com/compile-to-otf
+curl -v -O -J --data-binary @[my-new-file] \
+  https://bitfontmake.herokuapp.com/compile-to-ttf
 ```
 
-(The `/compile-to-ttf` POST endpoint is also available, for compiling TTF
-font files.)
+The web service will respond by sending the TTF file for your font.
 
 ## Developing
 
